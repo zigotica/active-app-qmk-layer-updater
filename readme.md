@@ -6,13 +6,13 @@ A small node script that will check the current active app running in your OS, a
 
 ## Why
 
-My [z12 micropad](https://github.com/zigotica/mechanical-keyboards/tree/main/z12) uses 4 layers: vim, browser, figma and terminal (default). I wanted to change layer automatically depending on the main app running in OSX. More often than not, when in Figma I wanted to zoom using the right encoder, but I had left the default layer and the encoder would scroll. This script fixes these issues.
+My [z12 micropad](https://github.com/zigotica/mechanical-keyboards/tree/main/z12) uses 4 layers: vim, browser, figma and terminal (default). I wanted to change layer automatically depending on the main app running in OSX. More often than not, when working in Figma I wanted to zoom using the right encoder, but I had the default layer active, the encoder would scroll instead. This script fixes this kind of issues.
 
 ## Dependencies
 
-First requirement is a keyboard running QMK. You have to configure it to use [RAW HID](https://beta.docs.qmk.fm/using-qmk/software-features/feature_rawhid). On the QMK side you will need to add `RAW_ENABLE = yes` in the rules.mk file, and setup the `raw_hid_receive` method in the keymap.c file.
+First requirement is a keyboard running QMK, and configure it to use [RAW HID](https://beta.docs.qmk.fm/using-qmk/software-features/feature_rawhid). See example in the section below. 
 
-This node script requires [node](https://nodejs.org) and [active-win-cli](https://github.com/sindresorhus/active-win-cli). Since node is probably already installed, just:
+This node script requires [node](https://nodejs.org), [node-hid](https://github.com/node-hid/node-hid) and [active-win-cli](https://github.com/sindresorhus/active-win-cli). Since node is probably already installed, just:
 
 ```
 $ npm install --global active-win-cli
@@ -26,7 +26,13 @@ $ npm install --global node-hid
 
 ## Setup
 
-The script will check the app and title options of `active-win-cli` every half a second, and send a hex representation of the layer I want to target depending on the app to the micropad, using `node-hid`'s `write` method. I send just a letter in hex format, for instance, 0x56 for 'V'. This will trigger the `raw_hid_receive` method on the QMK, where you can perform `layer_clear();` to clean up previous calls, then `if (data[0] == 'V') { layer_on(_NVIM); }` kind of checks. Example code in keymap.c:
+### Node side
+
+The script will check the app and title options of `active-win-cli` every half a second, and send a hex representation of the layer I want to target depending on the app to the micropad, using `node-hid`'s `write` method. I only send a letter in hex format, for instance, 0x56 for `V`. 
+
+### QMK side
+
+On the QMK side you will need to add `RAW_ENABLE = yes` in the rules.mk file. The `write` call from the node script will trigger the `raw_hid_receive` method on the QMK, where you can perform `layer_clear();` to clean up previous calls, then `if (data[0] == 'V') { layer_on(_NVIM); }` kind of checks. Example code in keymap.c:
 
 ```c
 #include "raw_hid.h"
@@ -49,8 +55,6 @@ void raw_hid_receive(uint8_t* data, uint8_t length) {
 }
 #endif
 ```
-
-In this case, `write` method sends `V`, `B`, `F` (in hex format) and the enum layers are `_NVIM`, `_BROW`, `_FIGM`, and `_TERM`.
 
 ## How to run it
 
