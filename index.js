@@ -44,7 +44,7 @@ function connect() {
               titleData = data.toString().trim().toLowerCase();
               if(titleData.indexOf('vim') > -1) {
                 title = '_NVIM';
-              } else if(titleData.indexOf('figma') > -1) {
+              } else if(titleData.substr(-5) === 'figma') {
                 title = '_FIGM';
               }
             });
