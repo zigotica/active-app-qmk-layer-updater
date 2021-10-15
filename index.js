@@ -25,7 +25,7 @@ function connect() {
         connect();
       });
 
-      device.write( [ 0x09 ] ); // dummy
+      device.write( [ 0x00 ] ); // default layer
 
       var toSend;
       var app;
@@ -67,10 +67,10 @@ function connect() {
 
             if(toSend != undefined) {
               var ts;
-              if (toSend == '_NVIM') ts = 0x56;
-              if (toSend == '_BROW') ts = 0x42;
-              if (toSend == '_FIGM') ts = 0x46;
-              if (toSend == '_TERM') ts = 0x54;
+              if (toSend == '_NVIM') ts = 0x03;
+              if (toSend == '_BROW') ts = 0x02;
+              if (toSend == '_FIGM') ts = 0x01;
+              if (toSend == '_TERM') ts = 0x00;
 
               if(ts != undefined) device.write( [ ts ] );
             }

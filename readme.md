@@ -28,11 +28,11 @@ $ npm install --global node-hid
 
 ### Node side
 
-The script will check the app and title options of `active-win-cli` every half a second, and send a hex representation of the layer I want to target depending on the app to the micropad, using `node-hid`'s `write` method. I only send a letter in hex format, for instance, 0x56 for `V`. 
+The script will check the app and title options of `active-win-cli` every half a second, and send a hex representation of the layer I want to target depending on the app to the micropad, using `node-hid`'s `write` method. I only send a layer index in hex format, for instance, 0x03 to match the Vim layer (which is the 4th layer in my layers' enum). 
 
 ### QMK side
 
-On the QMK side you will need to add `RAW_ENABLE = yes` in the rules.mk file. The `write` call from the node script will trigger the `raw_hid_receive` method on the QMK, where you can perform `layer_clear();` to clean up previous calls, then `if (data[0] == 'V') { layer_on(_NVIM); }` kind of checks. Example code in keymap.c:
+On the QMK side you will need to add `RAW_ENABLE = yes` in the rules.mk file. The `write` call from the node script will trigger the `raw_hid_receive` method on the QMK, where you can perform `layer_clear();` to clean up previous calls, then `layer_on(data[0])` to change to layer sent through the stream. Example code in keymap.c:
 
 ```c
 #include "raw_hid.h"
@@ -40,18 +40,7 @@ On the QMK side you will need to add `RAW_ENABLE = yes` in the rules.mk file. Th
 #ifdef RAW_ENABLE
 void raw_hid_receive(uint8_t* data, uint8_t length) {
     layer_clear();
-    if (data[0] == 'V') {
-        layer_on(_NVIM);
-    }
-    else if (data[0] == 'B') {
-        layer_on(_BROW);
-    }
-    else if (data[0] == 'F') {
-        layer_on(_FIGM);
-    }
-    else {
-        layer_on(_TERM);
-    }
+    layer_on(data[0]);
 }
 #endif
 ```
