@@ -27,6 +27,7 @@ function connect() {
 
       device.write( [ 0x00 ] ); // default layer
 
+      var was = 0;
       var toSend;
       var app;
       var appData;
@@ -73,8 +74,9 @@ function connect() {
               // default B, we cannot layer_on(data[0]) when 0x00 in raw_hid_receive (why?)
               if (toSend == '_TERM') ts = 0x42;
 
-              if(ts != undefined) {
+              if(ts != undefined && was != ts) {
                 device.write( [ ts ] );
+                was = ts
               }
             }
             
