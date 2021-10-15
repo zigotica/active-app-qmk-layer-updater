@@ -70,9 +70,12 @@ function connect() {
               if (toSend == '_NVIM') ts = 0x03;
               if (toSend == '_BROW') ts = 0x02;
               if (toSend == '_FIGM') ts = 0x01;
-              if (toSend == '_TERM') ts = 0x00;
+              // default B, we cannot layer_on(data[0]) when 0x00 in raw_hid_receive (why?)
+              if (toSend == '_TERM') ts = 0x42;
 
-              if(ts != undefined) device.write( [ ts ] );
+              if(ts != undefined) {
+                device.write( [ ts ] );
+              }
             }
             
           }, 500);

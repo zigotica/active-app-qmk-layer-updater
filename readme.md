@@ -28,11 +28,11 @@ $ npm install --global node-hid
 
 ### Node side
 
-The script will check the app and title options of `active-win-cli` every half a second, and send a hex representation of the layer I want to target depending on the app to the micropad, using `node-hid`'s `write` method. I only send a layer index in hex format, for instance, 0x03 to match the Vim layer (which is the 4th layer in my layers' enum). 
+The script will check the app and title options of `active-win-cli` every half a second, and send a hex representation of the layer I want to target depending on the app to the micropad, using `node-hid`'s `write` method. I only send a layer index in hex format, for instance, 0x03 to match the Vim layer (which is the 4th layer in my layers' enum). Note: we are sending 0x42 ('B') when we want to restore default layer (0), apparently layer_on(data[0]) doesn't work in raw_hid_receive when 0x00.
 
 ### QMK side
 
-On the QMK side you will need to add `RAW_ENABLE = yes` in the rules.mk file. The `write` call from the node script will trigger the `raw_hid_receive` method on the QMK, where you can perform `layer_clear();` to clean up previous calls, then `layer_on(data[0])` to change to layer sent through the stream. Example code in keymap.c:
+On the QMK side you will need to add `RAW_ENABLE = yes` in the rules.mk file. The `write` call from the node script will trigger the `raw_hid_receive` method on the QMK, where you can perform `layer_clear();` to clean up previous calls, then `layer_on(data[0])` to change to layer sent through the stream. Note the use of 0x42 to check base layer. Example code in keymap.c:
 
 ```c
 #include "raw_hid.h"
@@ -40,7 +40,12 @@ On the QMK side you will need to add `RAW_ENABLE = yes` in the rules.mk file. Th
 #ifdef RAW_ENABLE
 void raw_hid_receive(uint8_t* data, uint8_t length) {
     layer_clear();
-    layer_on(data[0]);
+    if (data[0] == 0x42) {
+        layer_on(_TERM);
+    }
+    else {
+        layer_on(data[0]);
+    }
 }
 #endif
 ```
