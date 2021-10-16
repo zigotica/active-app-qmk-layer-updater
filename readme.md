@@ -60,6 +60,18 @@ $ node index.js
 
 It can also be called from a cron job.
 
+## To Do
+
+[x] PoC
+[ ] Documentation
+    [x] Basic use
+    [ ] launchd / cron
+[x] Credits
+[ ] Configuration file
+    [ ] Timers
+    [ ] Rules
+    [ ] Product name
+
 ## Credits
 
 Big thanks to [sindresorhus](https://github.com/sindresorhus/) for the excellent `active-win-cli`, [fauxpark](https://github.com/fauxpark), [precondition](https://github.com/precondition) and [riblee](https://github.com/riblee) for helping me understand node-hid connection, `uint8_t* data` pointer and methods to change layer programmatically.
