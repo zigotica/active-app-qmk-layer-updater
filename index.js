@@ -3,9 +3,14 @@
 const { spawn } = require('child_process');
 var hid = require('node-hid');
 var timerID;
+const fs = require('fs');
+
+let configFile = fs.readFileSync('config.json');
+let configData = JSON.parse(configFile);
+const { product } = configData;
 
 var isTargetDevice = function(d) {
-  return d.product==='z12' && d.usagePage===0xFF60 && d.usage===0x61;
+  return d.product===product && d.usagePage===0xFF60 && d.usage===0x61;
 }
 
 var device;

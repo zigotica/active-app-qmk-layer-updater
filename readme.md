@@ -66,7 +66,7 @@ It can also be called from a cron job.
 * [ ] Configuration file
   * [ ] Timers
   * [ ] Rules
-  * [ ] Product name
+  * [x] Product name
 * [ ] Documentation
   * [x] Basic use
   * [ ] Configuration file
