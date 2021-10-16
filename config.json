@@ -1,8 +1,0 @@
-{
-  "PRODUCT": "z12",
-  "TIMERS": {
-    "LINK": 1500,
-    "RELINK": 1500,
-    "RUNNER": 500
-  }
-}

@@ -5,19 +5,72 @@ var hid = require('node-hid');
 var timerID;
 const fs = require('fs');
 const ARGS = process.argv.slice(2);
-const path = ARGS[0] || 'config.json';
+const path = ARGS[0] || './config.js';
 
 if (!fs.existsSync(path)) {
   console.log('configuration file needed');
   process.exit();
 }
 
-let configFile = fs.readFileSync(path);
-let configData = JSON.parse(configFile);
-const { PRODUCT, TIMERS } = configData;
+const config = require(path);
+const { PRODUCT, TIMERS, VALUES, CONDITIONS, RULES } = config;
+let PARSEDCONDITIONS = [];
 
-var isTargetDevice = function(d) {
+const isTargetDevice = function(d) {
   return d.product===PRODUCT && d.usagePage===0xFF60 && d.usage===0x61;
+}
+
+const conditionsParser = function() {
+  let { data } = arguments[0];
+
+  data.forEach((condition, index) => {
+    const { id, type } = condition;
+    let { lhs, rhs } = condition;
+    let fulfilled = false;
+    lhs = (typeof lhs === 'number')? lhs : arguments[0][lhs];
+
+    if(typeof rhs !== 'object') rhs = [rhs];
+    for(let i=0, l=rhs.length; i<l; i++) {
+      const desired = rhs[i];
+      if(type === 'contains') {
+        fulfilled = lhs.indexOf(desired) > -1;
+      } else if(type === 'ends') {
+        fulfilled = lhs.substr(-desired.length) === desired;
+      } else if(type === 'starts') {
+        fulfilled = lhs.substr(desired.length) === desired;
+      } else if(type === 'equals') {
+        fulfilled = lhs === desired;
+      }
+      if(fulfilled === true) {
+        break;
+      }
+    }
+
+    PARSEDCONDITIONS[id] = condition;
+    PARSEDCONDITIONS[id].fulfilled = fulfilled;
+  });
+}
+
+const rulesParser = function(CONDITIONS, RULES) {
+  let OUTPUT;
+  for(let i=0, l=RULES.length; i<l; i++) {
+    const rule = RULES[i];
+    const { operator, conditions, output } = rule;
+    let qualifies = (operator === "and")? 1:0;
+
+    conditions.forEach(condition => {
+      const { id, expected } = condition;
+      const fulfilled = PARSEDCONDITIONS[id].fulfilled;
+      if(operator === 'and') qualifies *= fulfilled;
+      if(operator === 'or') qualifies += fulfilled;
+      if(!operator) qualifies = fulfilled === expected;
+    });
+
+    OUTPUT = output;
+    if(!!qualifies) break;
+  }
+
+  return OUTPUT;
 }
 
 var device;
@@ -27,7 +80,7 @@ function connect() {
 
   if( deviceInfo ) {
     device = new hid.HID( deviceInfo.path );
-    
+
     if(device) {
       device.on('data', function(data) {});
 
@@ -37,58 +90,30 @@ function connect() {
         connect();
       });
 
-      device.write( [ 0x00 ] ); // default layer
+      device.write( [ VALUES['DEFAULT'] ] ); // default layer
 
-      var was = 0;
-      var toSend;
-      var app;
+      var was = VALUES['DEFAULT'];
+      var output;
       var appData;
-      var title;
       var titleData;
 
       setTimeout( () => {
           timerID = setInterval( () => {
             const aw = spawn('active-win');
             aw.stdout.on('data', (data) => {
-              // reset
-              app = '';
-              title = '';
               const arr = data.toString().trim().toLowerCase().split('\n');
 
               appData = arr[2];
               titleData = arr[0];
 
-              if(appData.indexOf('firefox') > -1 || appData.indexOf('chrome') > -1 || appData.indexOf('safari') > -1) {
-                app = '_BROW';
-              } else {
-                app = '_TERM';
-              }
-
-              if(titleData.indexOf('vim') > -1) {
-                title = '_NVIM';
-              } else if(titleData.substr(-5) === 'figma') {
-                title = '_FIGM';
-              }
+              conditionsParser({data: CONDITIONS, app: appData, title: titleData});
+              output = rulesParser(PARSEDCONDITIONS, RULES);
             });
 
-            // Final logic
-            if((app == '_BROW' && title == '_FIGM') || (app == '_TERM' && title == '_NVIM')){
-              toSend = title;
-            } else toSend = app;
-
-            if(toSend != undefined) {
-              var ts;
-              if (toSend == '_NVIM') ts = 0x03;
-              if (toSend == '_BROW') ts = 0x02;
-              if (toSend == '_FIGM') ts = 0x01;
-              // default B, we cannot layer_on(data[0]) when 0x00 in raw_hid_receive (why?)
-              if (toSend == '_TERM') ts = 0x42;
-
-              if(ts != undefined && was != ts) {
-                device.write( [ ts ] );
-                was = ts
+              if(output && was != output) {
+                device.write( [ output ] );
+                was = output;
               }
-            }
           }, TIMERS.RUNNER);
       },TIMERS.LINK);
     } else {}
