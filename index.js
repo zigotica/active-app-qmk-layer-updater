@@ -7,10 +7,10 @@ const fs = require('fs');
 
 let configFile = fs.readFileSync('config.json');
 let configData = JSON.parse(configFile);
-const { product, timers } = configData;
+const { PRODUCT, TIMERS } = configData;
 
 var isTargetDevice = function(d) {
-  return d.product===product && d.usagePage===0xFF60 && d.usage===0x61;
+  return d.product===PRODUCT && d.usagePage===0xFF60 && d.usage===0x61;
 }
 
 var device;
@@ -84,13 +84,13 @@ function connect() {
                 was = ts
               }
             }
-          }, timers.runner);
-      },timers.link);
+          }, TIMERS.RUNNER);
+      },TIMERS.LINK);
     } else {}
   } else {
     setTimeout( () => {
       connect();
-    }, timers.relink);
+    }, TIMERS.RELINK);
   }
 }
 
