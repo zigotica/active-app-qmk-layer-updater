@@ -62,15 +62,15 @@ It can also be called from a cron job.
 
 ## To Do
 
-[x] PoC
-[ ] Documentation
-    [x] Basic use
-    [ ] launchd / cron
-[x] Credits
-[ ] Configuration file
-    [ ] Timers
-    [ ] Rules
-    [ ] Product name
+* [x] PoC
+* [ ] Documentation
+  * [x] Basic use
+  * [ ] launchd / cron
+* [x] Credits
+* [ ] Configuration file
+  * [ ] Timers
+  * [ ] Rules
+  * [ ] Product name
 
 ## Credits
 
