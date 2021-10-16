@@ -63,7 +63,7 @@ It can also be called from a cron job.
 ## To Do
 
 * [x] PoC
-* [ ] Configuration file
+* [x] Configuration file
   * [x] Allow different config file path
   * [x] Product name
   * [x] Timers
