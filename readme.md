@@ -64,9 +64,9 @@ It can also be called from a cron job.
 
 * [x] PoC
 * [ ] Configuration file
-  * [ ] Timers
-  * [ ] Rules
   * [x] Product name
+  * [x] Timers
+  * [ ] Rules
 * [ ] Documentation
   * [x] Basic use
   * [ ] Configuration file
