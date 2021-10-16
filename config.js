@@ -3,7 +3,7 @@ module.exports = {
   "TIMERS": {
     "LINK": 1500,
     "RELINK": 1500,
-    "RUNNER": 1000
+    "RUNNER": 500
   },
   "VALUES": {
     "DEFAULT": 0x42,
