@@ -4,8 +4,15 @@ const { spawn } = require('child_process');
 var hid = require('node-hid');
 var timerID;
 const fs = require('fs');
+const ARGS = process.argv.slice(2);
+const path = ARGS[0] || 'config.json';
 
-let configFile = fs.readFileSync('config.json');
+if (!fs.existsSync(path)) {
+  console.log('configuration file needed');
+  process.exit();
+}
+
+let configFile = fs.readFileSync(path);
 let configData = JSON.parse(configFile);
 const { PRODUCT, TIMERS } = configData;
 

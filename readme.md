@@ -64,6 +64,7 @@ It can also be called from a cron job.
 
 * [x] PoC
 * [ ] Configuration file
+  * [x] Allow different config file path
   * [x] Product name
   * [x] Timers
   * [ ] Rules
