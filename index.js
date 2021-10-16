@@ -48,28 +48,26 @@ function connect() {
 
       setTimeout( () => {
           timerID = setInterval( () => {
-            const tt = spawn('active-win', ['title']);
-            tt.stdout.on('data', (data) => {
-              // reset
-              title = '';
-
-              titleData = data.toString().trim().toLowerCase();
-              if(titleData.indexOf('vim') > -1) {
-                title = '_NVIM';
-              } else if(titleData.substr(-5) === 'figma') {
-                title = '_FIGM';
-              }
-            });
-            const aw = spawn('active-win', ['app']);
+            const aw = spawn('active-win');
             aw.stdout.on('data', (data) => {
               // reset
               app = '';
+              title = '';
+              const arr = data.toString().trim().toLowerCase().split('\n');
 
-              appData = data.toString().trim().toLowerCase();
+              appData = arr[2];
+              titleData = arr[0];
+
               if(appData.indexOf('firefox') > -1 || appData.indexOf('chrome') > -1 || appData.indexOf('safari') > -1) {
                 app = '_BROW';
               } else {
                 app = '_TERM';
+              }
+
+              if(titleData.indexOf('vim') > -1) {
+                title = '_NVIM';
+              } else if(titleData.substr(-5) === 'figma') {
+                title = '_FIGM';
               }
             });
 
