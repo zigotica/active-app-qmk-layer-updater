@@ -1,11 +1,7 @@
-const contained = require('./condition-is-contained.js');
-const { isContained } = contained;
-const ended = require('./condition-is-ended-with.js');
-const { isEndedWith } = ended;
-const equal = require('./condition-is-equal.js');
-const { isEqual } = equal;
-const started = require('./condition-is-started-with.js');
-const { isStartedWith } = started;
+const { isContained } = require('./condition-is-contained.js');
+const { isEndedWith } = require('./condition-is-ended-with.js');
+const { isEqual } = require('./condition-is-equal.js');
+const { isStartedWith } = require('./condition-is-started-with.js');
 
 const conditionsParser = (condition, literals) => {
   const { type } = condition;

@@ -15,8 +15,7 @@ if (!fs.existsSync(path)) {
 const configfile = fs.readFileSync(path);
 const config = JSON.parse(configfile);
 
-const parser = require('./rules-parser.js');
-const { rulesParser } = parser;
+const { rulesParser } = require('./rules-parser.js');
 const { PRODUCT, TIMERS, VALUES, CONDITIONS, RULES } = config;
 
 const isTargetDevice = function(d) {

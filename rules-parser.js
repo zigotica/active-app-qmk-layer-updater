@@ -1,5 +1,4 @@
-const parser = require('./conditions-parser.js');
-const { conditionsParser } = parser;
+const { conditionsParser } = require('./conditions-parser.js');
 
 const rulesParser = (data) => {
   const { CONDITIONS, RULES, DEFAULT, LITERALS } = data;
