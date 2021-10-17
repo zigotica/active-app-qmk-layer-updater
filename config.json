@@ -1,4 +1,4 @@
-module.exports = {
+{
   "PRODUCT": "z12",
   "TIMERS": {
     "LINK": 1500,
@@ -6,43 +6,30 @@ module.exports = {
     "RUNNER": 500
   },
   "VALUES": {
-    "DEFAULT": 0x42,
-    '1': 0x01,
-    '2': 0x02,
-    '3': 0x03,
+    "DEFAULT": 99
   },
-  "CONDITIONS": [
-    {
-      "id": "browser",
+  "CONDITIONS": {
+    "browser": {
       "lhs": "app",
       "rhs": ["chrome", "firefox", "safari"],
       "type": "contains"
     },
-    {
-      "id": "terminal",
+    "terminal": {
       "lhs": "app",
       "rhs": ["terminal", "alacritty"],
       "type": "equals"
     },
-    {
-      "id": "vim",
+    "vim": {
       "lhs": "title",
       "rhs": "vim",
-      "type": "contains"
+      "type": "ends"
     },
-    {
-      "id": "figma",
+    "figma": {
       "lhs": "title",
       "rhs": "figma",
       "type": "ends"
-    },
-    {
-      "id": "default",
-      "lhs": 1,
-      "rhs": 1,
-      "type": "equals"
     }
-  ],
+  },
   "RULES": [
     {
       "operator": "and",
@@ -54,9 +41,9 @@ module.exports = {
         {
           "id": "figma",
           "expected": true
-        },
+        }
       ],
-      "output": 0x01
+      "output": 1
     },
     {
       "operator": "and",
@@ -68,29 +55,18 @@ module.exports = {
         {
           "id": "vim",
           "expected": true
-        },
+        }
       ],
-      "output": 0x03
+      "output": 3
     },
     {
-      "operator": null,
       "conditions": [
         {
           "id": "browser",
           "expected": true
         }
       ],
-      "output": 0x02
-    },
-    {
-      "operator": null,
-      "conditions": [
-        {
-          "id": "default",
-          "expected": true
-        }
-      ],
-      "output": 0x42
-    },
+      "output": 2
+    }
   ]
-};
+}

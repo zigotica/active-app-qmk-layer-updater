@@ -5,72 +5,22 @@ var hid = require('node-hid');
 var timerID;
 const fs = require('fs');
 const ARGS = process.argv.slice(2);
-const path = ARGS[0] || './config.js';
+const path = ARGS[0] || './config.json';
 
 if (!fs.existsSync(path)) {
   console.log('configuration file needed');
   process.exit();
 }
 
-const config = require(path);
+const configfile = fs.readFileSync(path);
+const config = JSON.parse(configfile);
+
+const parser = require('./rules-parser.js');
+const { rulesParser } = parser;
 const { PRODUCT, TIMERS, VALUES, CONDITIONS, RULES } = config;
-let PARSEDCONDITIONS = [];
 
 const isTargetDevice = function(d) {
   return d.product===PRODUCT && d.usagePage===0xFF60 && d.usage===0x61;
-}
-
-const conditionsParser = function() {
-  let { data } = arguments[0];
-
-  data.forEach((condition, index) => {
-    const { id, type } = condition;
-    let { lhs, rhs } = condition;
-    let fulfilled = false;
-    lhs = (typeof lhs === 'number')? lhs : arguments[0][lhs];
-
-    if(typeof rhs !== 'object') rhs = [rhs];
-    for(let i=0, l=rhs.length; i<l; i++) {
-      const desired = rhs[i];
-      if(type === 'contains') {
-        fulfilled = lhs.indexOf(desired) > -1;
-      } else if(type === 'ends') {
-        fulfilled = lhs.substr(-desired.length) === desired;
-      } else if(type === 'starts') {
-        fulfilled = lhs.substr(desired.length) === desired;
-      } else if(type === 'equals') {
-        fulfilled = lhs === desired;
-      }
-      if(fulfilled === true) {
-        break;
-      }
-    }
-
-    PARSEDCONDITIONS[id] = condition;
-    PARSEDCONDITIONS[id].fulfilled = fulfilled;
-  });
-}
-
-const rulesParser = function(CONDITIONS, RULES) {
-  let OUTPUT;
-  for(let i=0, l=RULES.length; i<l; i++) {
-    const rule = RULES[i];
-    const { operator, conditions, output } = rule;
-    let qualifies = (operator === "and")? 1:0;
-
-    conditions.forEach(condition => {
-      const { id, expected } = condition;
-      const fulfilled = PARSEDCONDITIONS[id].fulfilled;
-      if(operator === 'and') qualifies *= fulfilled;
-      if(operator === 'or') qualifies += fulfilled;
-      if(!operator) qualifies = fulfilled === expected;
-    });
-
-    OUTPUT = output;
-    if(!!qualifies) break;
-  }
-
-  return OUTPUT;
 }
 
 var device;
@@ -106,8 +56,15 @@ function connect() {
               appData = arr[2];
               titleData = arr[0];
 
-              conditionsParser({data: CONDITIONS, app: appData, title: titleData});
-              output = rulesParser(PARSEDCONDITIONS, RULES);
+              output = rulesParser({
+                CONDITIONS: CONDITIONS, 
+                RULES: RULES, 
+                DEFAULT: VALUES['DEFAULT'], 
+                LITERALS: { 
+                  app: appData, 
+                  title: titleData 
+                }
+              });
             });
 
               if(output && was != output) {

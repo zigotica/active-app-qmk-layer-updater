@@ -68,7 +68,7 @@ It can also be called from a cron job.
   * [x] Product name
   * [x] Timers
   * [x] Conditions and Rules
-* [ ] Extract conditions and rules parsers into an external dependency
+* [x] Extract conditions and rules parsers into external files
 * [ ] Documentation
   * [x] Basic use
   * [ ] Configuration file
