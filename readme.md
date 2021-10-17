@@ -42,7 +42,7 @@ Each condition has an id, and requires two values and an operator that will calc
 
 The left hand side value is a reference to the app and title literals that we can send to the parser. 
 
-The right hand value is the string we want to compare.
+The right hand value is the string we want to compare. It can also be an array of strings. In that case, for the condition to be fulfilled any of the strings in the array must satisfy the operation.
 
 A condition will return a boolean, being true when it fulfills.
 
