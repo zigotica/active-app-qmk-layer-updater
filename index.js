@@ -43,6 +43,8 @@ function connect() {
       device.write( [ VALUES['DEFAULT'] ] ); // default layer
 
       var was = VALUES['DEFAULT'];
+      var wasApp = '';
+      var wasTitle = '';
       var output;
       var appData;
       var titleData;
@@ -56,21 +58,25 @@ function connect() {
               appData = arr[2];
               titleData = arr[0];
 
-              output = rulesParser({
-                CONDITIONS: CONDITIONS, 
-                RULES: RULES, 
-                DEFAULT: VALUES['DEFAULT'], 
-                LITERALS: { 
-                  app: appData, 
-                  title: titleData 
-                }
-              });
+              if(wasApp != appData && wasTitle != titleData) {
+                output = rulesParser({
+                  CONDITIONS: CONDITIONS, 
+                  RULES: RULES, 
+                  DEFAULT: VALUES['DEFAULT'], 
+                  LITERALS: { 
+                    app: appData, 
+                    title: titleData 
+                  }
+                });
+              }              
             });
 
-              if(output && was != output) {
-                device.write( [ output ] );
-                was = output;
-              }
+            if(output && was != output) {
+              device.write( [ output ] );
+              was = output;
+              wasApp = appData;
+              wasTitle = titleData;
+            }
           }, TIMERS.RUNNER);
       },TIMERS.LINK);
     } else {}
