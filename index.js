@@ -57,7 +57,7 @@ function connect() {
               appData = arr[2];
               titleData = arr[0];
 
-              if(wasApp != appData && wasTitle != titleData) {
+              if(wasApp != appData || wasTitle != titleData) {
                 output = rulesParser({
                   CONDITIONS: CONDITIONS, 
                   RULES: RULES, 
