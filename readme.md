@@ -28,11 +28,43 @@ $ npm install --global node-hid
 
 ### Node side
 
-The script will check the app and title options of `active-win-cli` every half a second, and send a hex representation of the layer I want to target depending on the app to the micropad, using `node-hid`'s `write` method. I only send a layer index in hex format, for instance, 0x03 to match the Vim layer (which is the 4th layer in my layers' enum). Note: we are sending 0x42 ('B') when we want to restore default layer (0), apparently layer_on(data[0]) doesn't work in raw_hid_receive when 0x00.
+The script will check the app and title options of `active-win-cli` every half a second, and send to the micropad the index of the layer I want to target depending on the app, using `node-hid`'s `write` method. 
+
+To determine which index to send, we need to parse a set of conditions and rules, which are completely configurable using a simple JSON file. This also allows us to use multiple scripts to target multiple QMK devices at the same time.
+
+The JSON file is an object that containes the product name, timer values for initialization, relink in case of a disconnection and runner (how often we want to check for the current app data). It also holds two objects for conditions and rules.
+
+#### Conditions
+
+CONDITONS is an object that includes one object per condition to be parsed by the rules. 
+
+Each condition has an id, and requires two values and an operator that will calculate if the condition is fulfilled. 
+
+The left hand side value is a reference to the app and title literals that we can send to the parser. 
+
+The right hand value is the string we want to compare.
+
+A condition will return a boolean, being true when it fulfills.
+
+#### Rules
+
+RULES is an array that includes one object per set of conditions. 
+
+Each set of conditions can have one or several conditions. In case of having more than one condition, the operator will define their logic. `or` operator will define that only one of the conditions must be met in order to satisfy the rule. `and` operator  will define that all the conditions must be met in order to satisfy the rule.
+
+Rules are evaluated top down. 
+
+The first rule that satisfies its conditions will break the loop and return the output value. That value is read by the main script and sent to the QMK device (only if it's different from previous cycle). 
+
+If no rule is satisfied, default value defined in the config.json file will be sent to the device. 
 
 ### QMK side
 
-On the QMK side you will need to add `RAW_ENABLE = yes` in the rules.mk file. The `write` call from the node script will trigger the `raw_hid_receive` method on the QMK, where you can perform `layer_clear();` to clean up previous calls, then `layer_on(data[0])` to change to layer sent through the stream. Note the use of 0x42 to check base layer. Example code in keymap.c:
+On the QMK side you will need to add `RAW_ENABLE = yes` in the rules.mk file. The `write` call from the node script will trigger the `raw_hid_receive` method on the QMK, where you can perform `layer_clear();` to clean up previous calls, then `layer_on(data[0])` to change to layer sent through the stream. 
+
+Note: we are sending `99` when we want to restore default layer (0), apparently `layer_on(data[0])` doesn't work in `raw_hid_receive` when we send `0`.
+
+Example code in keymap.c:
 
 ```c
 #include "raw_hid.h"
@@ -40,7 +72,7 @@ On the QMK side you will need to add `RAW_ENABLE = yes` in the rules.mk file. Th
 #ifdef RAW_ENABLE
 void raw_hid_receive(uint8_t* data, uint8_t length) {
     layer_clear();
-    if (data[0] == 0x42) {
+    if (data[0] == 99) {
         layer_on(_TERM);
     }
     else {
@@ -58,6 +90,12 @@ The script checks if there is connection to the device we want to control, using
 $ node index.js
 ```
 
+Default JSON file is `config.json` but you can use a different one and add its name as an argument to the main call:
+
+```
+$ node index.js otherfile.json
+```
+
 It can also be called from a cron job.
 
 ## To Do
@@ -71,7 +109,7 @@ It can also be called from a cron job.
 * [x] Extract conditions and rules parsers into external files
 * [ ] Documentation
   * [x] Basic use
-  * [ ] Configuration file
+  * [x] Configuration file
   * [ ] launchd / cron
 * [ ] Tests
 * [x] Credits
