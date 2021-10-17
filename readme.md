@@ -2,7 +2,7 @@
 
 ## What
 
-A small node script that will check the current active app running in your OS, and send the data to a qmk keyboard over raw hid. 
+A node script that checks the current active app running in your OS, parses some customizable rules and sends the target layer index to a QMK keyboard over raw hid, so you can change layers programmatically. 
 
 ## Why
 
