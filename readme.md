@@ -6,7 +6,7 @@ A node script that checks the current active app running in your OS, parses some
 
 ## Why
 
-My [z12 micropad](https://github.com/zigotica/mechanical-keyboards/tree/main/z12) uses 4 layers: vim, browser, figma and terminal (default). I wanted to change layer automatically depending on the main app running in OSX. More often than not, when working in Figma I wanted to zoom using the right encoder, but I had the default layer active, the encoder would scroll instead. This script fixes this kind of issues.
+My [z12 micropad](https://github.com/zigotica/mechanical-keyboards/tree/main/z12) uses 4 layers: vim, browser, figma and default. Encoders do different things on each layer. More often than not, when working in Figma I wanted to zoom using the right encoder, but if I had the default layer active, the encoder would scroll instead. This script fixes this kind of issues, alows me to change layer automatically depending on the main app running in OSX, forgetting about having to manually switch the layer myself. 
 
 ## Dependencies
 
