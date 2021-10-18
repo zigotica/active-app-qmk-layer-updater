@@ -22,7 +22,7 @@
     "vim": {
       "lhs": "title",
       "rhs": "vim",
-      "type": "ends"
+      "type": "contains"
     },
     "figma": {
       "lhs": "title",
