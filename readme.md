@@ -1,4 +1,4 @@
-# qmk-hid
+# active app qmk layer updater
 
 ## What
 
