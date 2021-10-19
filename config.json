@@ -22,6 +22,11 @@
     "vim": {
       "lhs": "title",
       "rhs": "vim",
+      "type": "ends"
+    },
+    "vimtmux": {
+      "lhs": "title",
+      "rhs": ":nvim",
       "type": "contains"
     },
     "figma": {
@@ -54,6 +59,20 @@
         },
         {
           "id": "vim",
+          "expected": true
+        }
+      ],
+      "output": 3
+    },
+    {
+      "operator": "and",
+      "conditions": [
+        {
+          "id": "terminal",
+          "expected": true
+        },
+        {
+          "id": "vimtmux",
           "expected": true
         }
       ],
