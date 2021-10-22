@@ -56,7 +56,7 @@ function connect() {
 
       setTimeout(() => {
         timerID = setInterval(() => {
-          const aw = spawn('active-win');
+          const aw = spawn('npm exec active-win');
           aw.stdout.on('data', (data) => {
             const arr = data.toString().trim().toLowerCase().split('\n');
 

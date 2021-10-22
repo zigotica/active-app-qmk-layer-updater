@@ -10,19 +10,21 @@ My [z12 micropad](https://github.com/zigotica/mechanical-keyboards/tree/main/z12
 
 ## Dependencies
 
-First requirement is a keyboard running QMK, and configure it to use [RAW HID](https://beta.docs.qmk.fm/using-qmk/software-features/feature_rawhid). See example in the section below. 
+First requirement is a keyboard running QMK, and configure it to use [RAW HID](https://beta.docs.qmk.fm/using-qmk/software-features/feature_rawhid). See example in the section below.
 
 This node script requires [node](https://nodejs.org), [node-hid](https://github.com/node-hid/node-hid), [json-based-conditions-and-rules-logic-evaluator](https://github.com/zigotica/json-based-conditions-and-rules-logic-evaluator) and [active-win-cli](https://github.com/sindresorhus/active-win-cli). Since node is probably already installed, just:
 
 ```
-$ npm install --global active-win-cli
-```
-
-Now install dependencies from the package.json:
-
-```
 $ npm install
 ```
+
+and then
+
+```
+$ node index.js
+```
+
+to start the script.
 
 ## Setup
 
