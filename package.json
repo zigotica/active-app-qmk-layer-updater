@@ -1,6 +1,6 @@
 {
   "name": "active-app-qmk-layer-updater",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "script that checks the current active app running in your OS, parses some customizable rules and sends the target layer index to a QMK keyboard over raw hid, so you can change layers programmatically",
   "keywords": [
     "QMK",
@@ -22,7 +22,18 @@
   },
   "author": "Sergi Meseguer <zigotica@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "lint": "eslint ./ --ext .js"
+  },
   "dependencies": {
-    "json-based-conditions-and-rules-logic-evaluator": "^1.0.0"
+    "json-based-conditions-and-rules-logic-evaluator": "^1.0.0",
+    "node-hid": "^2.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.1",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.26.1"
   }
 }

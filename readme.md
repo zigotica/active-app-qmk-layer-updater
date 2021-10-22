@@ -18,13 +18,7 @@ This node script requires [node](https://nodejs.org), [node-hid](https://github.
 $ npm install --global active-win-cli
 ```
 
-`node-hid` should be requested by Node. In case it is not available, run:
-
-```
-$ npm install --global node-hid
-```
-
-You will also need to install the JSON based conditions and rules logic evaluator dependency from the package.json:
+Now install dependencies from the package.json:
 
 ```
 $ npm install
