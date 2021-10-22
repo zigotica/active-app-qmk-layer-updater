@@ -5,9 +5,7 @@
     "RELINK": 1500,
     "RUNNER": 500
   },
-  "VALUES": {
-    "DEFAULT": 99
-  },
+  "DEFAULT": 99,
   "CONDITIONS": {
     "browser": {
       "lhs": "app",

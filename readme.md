@@ -12,7 +12,7 @@ My [z12 micropad](https://github.com/zigotica/mechanical-keyboards/tree/main/z12
 
 First requirement is a keyboard running QMK, and configure it to use [RAW HID](https://beta.docs.qmk.fm/using-qmk/software-features/feature_rawhid). See example in the section below. 
 
-This node script requires [node](https://nodejs.org), [node-hid](https://github.com/node-hid/node-hid) and [active-win-cli](https://github.com/sindresorhus/active-win-cli). Since node is probably already installed, just:
+This node script requires [node](https://nodejs.org), [node-hid](https://github.com/node-hid/node-hid), [json-based-conditions-and-rules-logic-evaluator](https://github.com/zigotica/json-based-conditions-and-rules-logic-evaluator) and [active-win-cli](https://github.com/sindresorhus/active-win-cli). Since node is probably already installed, just:
 
 ```
 $ npm install --global active-win-cli
@@ -22,6 +22,12 @@ $ npm install --global active-win-cli
 
 ```
 $ npm install --global node-hid
+```
+
+You will also need to install the JSON based conditions and rules logic evaluator dependency from the package.json:
+
+```
+$ npm install
 ```
 
 ## Setup
@@ -38,25 +44,13 @@ The JSON file is an object that containes the product name, timer values for ini
 
 CONDITONS is an object that includes one object per condition to be parsed by the rules. 
 
-Each condition has an id, and requires two values and an operator that will calculate if the condition is fulfilled. 
-
-The left hand side value is a reference to the app and title literals that we can send to the parser. 
-
-The right hand value is the string we want to compare. It can also be an array of strings. In that case, for the condition to be fulfilled any of the strings in the array must satisfy the operation.
-
-A condition will return a boolean, being true when it fulfills.
+Follow the [documentation](https://github.com/zigotica/json-based-conditions-and-rules-logic-evaluator) for the CONDITONS object structure, and/or see examples of use, even the [config.json](https://github.com/zigotica/active-app-qmk-layer-updater/blob/main/config.json) used in this repo.
 
 #### Rules
 
 RULES is an array that includes one object per set of conditions. 
 
-Each set of conditions can have one or several conditions. In case of having more than one condition, the operator will define their logic. `or` operator will define that only one of the conditions must be met in order to satisfy the rule. `and` operator  will define that all the conditions must be met in order to satisfy the rule.
-
-Rules are evaluated top down. 
-
-The first rule that satisfies its conditions will break the loop and return the output value. That value is read by the main script and sent to the QMK device (only if it's different from previous cycle). 
-
-If no rule is satisfied, default value defined in the config.json file will be sent to the device. 
+Follow the [documentation](https://github.com/zigotica/json-based-conditions-and-rules-logic-evaluator) for the RULES object structure, and/or see examples of use, even the [config.json](https://github.com/zigotica/active-app-qmk-layer-updater/blob/main/config.json) used in this repo.
 
 ### QMK side
 
@@ -106,12 +100,12 @@ It can also be called from a cron job.
   * [x] Product name
   * [x] Timers
   * [x] Conditions and Rules
-* [x] Extract conditions and rules parsers into external files
+* [x] Extract conditions and rules parsers into [external repo](https://github.com/zigotica/json-based-conditions-and-rules-logic-evaluator)
 * [ ] Documentation
   * [x] Basic use
   * [x] Configuration file
   * [ ] launchd / cron
-* [ ] Tests
+* [x] Tests (see external repo)
 * [x] Credits
 
 ## Credits

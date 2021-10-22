@@ -15,8 +15,8 @@ if (!fs.existsSync(path)) {
 const configfile = fs.readFileSync(path);
 const config = JSON.parse(configfile);
 
-const { rulesParser } = require('./rules-parser.js');
-const { PRODUCT, TIMERS, VALUES, CONDITIONS, RULES } = config;
+const { parser } = require('json-based-conditions-and-rules-logic-evaluator');
+const { PRODUCT, TIMERS, DEFAULT, CONDITIONS, RULES } = config;
 
 const isTargetDevice = function(d) {
   return d.product===PRODUCT && d.usagePage===0xFF60 && d.usage===0x61;
@@ -39,9 +39,9 @@ function connect() {
         connect();
       });
 
-      device.write( [ VALUES['DEFAULT'] ] ); // default layer
+      device.write( [ DEFAULT ] ); // default layer code
 
-      var was = VALUES['DEFAULT'];
+      var was = DEFAULT;
       var wasApp = '';
       var wasTitle = '';
       var output;
@@ -58,14 +58,13 @@ function connect() {
               titleData = arr[0];
 
               if(wasApp != appData || wasTitle != titleData) {
-                output = rulesParser({
+                output = parser({
                   CONDITIONS: CONDITIONS, 
                   RULES: RULES, 
-                  DEFAULT: VALUES['DEFAULT'], 
-                  LITERALS: { 
-                    app: appData, 
-                    title: titleData 
-                  }
+                  DEFAULT: DEFAULT,
+                }, { 
+                  app: appData, 
+                  title: titleData 
                 });
               }              
             });

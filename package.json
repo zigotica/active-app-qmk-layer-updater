@@ -1,0 +1,28 @@
+{
+  "name": "active-app-qmk-layer-updater",
+  "version": "1.0.0",
+  "description": "script that checks the current active app running in your OS, parses some customizable rules and sends the target layer index to a QMK keyboard over raw hid, so you can change layers programmatically",
+  "keywords": [
+    "QMK",
+    "QMK layer",
+    "Active app",
+    "OS",
+    "RAW HID",
+    "JSON",
+    "Node",
+    "Javascript",
+    "Conditions",
+    "Rules",
+    "Parser",
+    "Logic"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:zigotica/active-app-qmk-layer-updater"
+  },
+  "author": "Sergi Meseguer <zigotica@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "json-based-conditions-and-rules-logic-evaluator": "^1.0.0"
+  }
+}
