@@ -1,5 +1,5 @@
 /* eslint prefer-destructuring: ["error", {VariableDeclarator: {array: true}}] */
-const { spawn } = require('child_process');
+const { exec } = require('child_process');
 const hid = require('node-hid');
 const fs = require('fs');
 const { parser } = require('json-based-conditions-and-rules-logic-evaluator');
@@ -56,8 +56,7 @@ function connect() {
 
       setTimeout(() => {
         timerID = setInterval(() => {
-          const aw = spawn('`npm bin`/active-win');
-          aw.stdout.on('data', (data) => {
+          const aw = exec('npx', ['active-win'], (data) => {
             const arr = data.toString().trim().toLowerCase().split('\n');
 
             appData = arr[2];
