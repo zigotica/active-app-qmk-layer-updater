@@ -12,13 +12,7 @@ My [z12 micropad](https://github.com/zigotica/mechanical-keyboards/tree/main/z12
 
 First requirement is a keyboard running QMK, and configure it to use [RAW HID](https://beta.docs.qmk.fm/using-qmk/software-features/feature_rawhid). See example in the section below. 
 
-This node script requires [node](https://nodejs.org), [node-hid](https://github.com/node-hid/node-hid), [json-based-conditions-and-rules-logic-evaluator](https://github.com/zigotica/json-based-conditions-and-rules-logic-evaluator) and [active-win-cli](https://github.com/sindresorhus/active-win-cli). Since node is probably already installed, just:
-
-```
-$ npm install --global active-win-cli
-```
-
-Now install dependencies from the package.json:
+This node script requires [node](https://nodejs.org), with three dependencies: [node-hid](https://github.com/node-hid/node-hid), [json-based-conditions-and-rules-logic-evaluator](https://github.com/zigotica/json-based-conditions-and-rules-logic-evaluator) and [active-win-cli](https://github.com/sindresorhus/active-win-cli). Since node is probably already installed, just install dependencies from the package.json:
 
 ```
 $ npm install
@@ -95,6 +89,7 @@ It can also be called from a cron job.
   * [x] Timers
   * [x] Conditions and Rules
 * [x] Extract conditions and rules parsers into [external repo](https://github.com/zigotica/json-based-conditions-and-rules-logic-evaluator)
+* [x] Remove all external global deps, move them to local npm deps
 * [ ] Documentation
   * [x] Basic use
   * [x] Configuration file
@@ -104,4 +99,4 @@ It can also be called from a cron job.
 
 ## Credits
 
-Big thanks to [sindresorhus](https://github.com/sindresorhus/) for the excellent `active-win-cli`, [fauxpark](https://github.com/fauxpark), [precondition](https://github.com/precondition) and [riblee](https://github.com/riblee) for helping me understand node-hid connection, `uint8_t* data` pointer and methods to change layer programmatically.
+Big thanks to [sindresorhus](https://github.com/sindresorhus/) for the excellent `active-win-cli`, [fauxpark](https://github.com/fauxpark), [precondition](https://github.com/precondition) and [riblee](https://github.com/riblee) for helping me understand node-hid connection, `uint8_t* data` pointer and methods to change layer programmatically. [Ale Muñoz](https://github.com/bomberstudios/active-app-qmk-layer-updater/) for helping me remove all global deps and move them to the package.json.
