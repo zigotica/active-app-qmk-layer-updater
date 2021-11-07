@@ -1,6 +1,6 @@
 {
   "name": "active-app-qmk-layer-updater",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "script that checks the current active app running in your OS, parses some customizable rules and sends the target layer index to a QMK keyboard over raw hid, so you can change layers programmatically",
   "keywords": [
     "QMK",
