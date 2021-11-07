@@ -1,5 +1,5 @@
 /* eslint prefer-destructuring: ["error", {VariableDeclarator: {array: true}}] */
-const { spawn } = require('child_process');
+const { exec } = require('child_process');
 const hid = require('node-hid');
 const fs = require('fs');
 const { parser } = require('json-based-conditions-and-rules-logic-evaluator');
@@ -46,7 +46,7 @@ function connect() {
       device.on('data', () => {});
 
       device.on('error', (err) => {
-        console.log('device error:', err);
+        console.error('device error:', err);
         device.close();
         clearInterval(timerID);
         connect();
@@ -56,31 +56,36 @@ function connect() {
 
       setTimeout(() => {
         timerID = setInterval(() => {
-          const aw = spawn('active-win');
-          aw.stdout.on('data', (data) => {
-            const arr = data.toString().trim().toLowerCase().split('\n');
+          exec('npx active-win', (e, stdout) => {
+            if (e instanceof Error) {
+              console.error('error:', e);
+              clearInterval(timerID);
+            }
+            if (stdout) {
+              const arr = stdout.toString().trim().toLowerCase().split('\n');
 
-            appData = arr[2];
-            titleData = arr[0];
+              appData = arr[2];
+              titleData = arr[0];
 
-            if (wasApp !== appData || wasTitle !== titleData) {
-              output = parser({
-                CONDITIONS,
-                RULES,
-                DEFAULT,
-              }, {
-                app: appData,
-                title: titleData,
-              });
+              if (wasApp !== appData || wasTitle !== titleData) {
+                output = parser({
+                  CONDITIONS,
+                  RULES,
+                  DEFAULT,
+                }, {
+                  app: appData,
+                  title: titleData,
+                });
+              }
+
+              if (output && was !== output) {
+                device.write([output]);
+                was = output;
+                wasApp = appData;
+                wasTitle = titleData;
+              }
             }
           });
-
-          if (output && was !== output) {
-            device.write([output]);
-            was = output;
-            wasApp = appData;
-            wasTitle = titleData;
-          }
         }, TIMERS.RUNNER);
       }, TIMERS.LINK);
     }

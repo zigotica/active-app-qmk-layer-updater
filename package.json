@@ -26,7 +26,8 @@
     "lint": "eslint ./ --ext .js"
   },
   "dependencies": {
-    "json-based-conditions-and-rules-logic-evaluator": "^1.0.0",
+    "active-win-cli": "^2.0.0",
+    "json-based-conditions-and-rules-logic-evaluator": "^1.0.2",
     "node-hid": "^2.1.1"
   },
   "devDependencies": {
