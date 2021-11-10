@@ -59,7 +59,6 @@ function connect() {
           exec('npx active-win', (e, stdout) => {
             if (e instanceof Error) {
               console.error('error:', e);
-              clearInterval(timerID);
             }
             if (stdout) {
               const arr = stdout.toString().trim().toLowerCase().split('\n');
