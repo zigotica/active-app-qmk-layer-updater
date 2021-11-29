@@ -80,6 +80,10 @@ $ node index.js otherfile.json
 
 It can also be called from a cron job.
 
+### screenRecordingPermission (macOS only)
+
+You need to [give Terminal screenRecordingPermission in macOS](https://github.com/sindresorhus/active-win#screenrecordingpermission-macos-only), otherwise active-win will always be an empty string for the title.
+
 ## To Do
 
 * [x] PoC
