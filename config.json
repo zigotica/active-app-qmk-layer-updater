@@ -1,9 +1,9 @@
 {
   "PRODUCT": "z12",
   "TIMERS": {
-    "LINK": 1500,
-    "RELINK": 1500,
-    "RUNNER": 500
+    "LINK": 2500,
+    "RELINK": 2500,
+    "RUNNER": 2000
   },
   "DEFAULT": 99,
   "CONDITIONS": {
@@ -14,7 +14,7 @@
     },
     "terminal": {
       "lhs": "app",
-      "rhs": ["terminal", "alacritty"],
+      "rhs": ["terminal", "alacritty", "kitty"],
       "type": "equals"
     },
     "vim": {
@@ -28,12 +28,26 @@
       "type": "contains"
     },
     "figma": {
+      "lhs": "app",
+      "rhs": "figma",
+      "type": "equals"
+    },
+    "figmatitle": {
       "lhs": "title",
       "rhs": "figma",
       "type": "ends"
     }
   },
   "RULES": [
+    {
+      "conditions": [
+        {
+          "id": "figma",
+          "expected": true
+        }
+      ],
+      "output": 1
+    },
     {
       "operator": "and",
       "conditions": [
@@ -42,7 +56,7 @@
           "expected": true
         },
         {
-          "id": "figma",
+          "id": "figmatitle",
           "expected": true
         }
       ],
